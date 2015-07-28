@@ -2,6 +2,11 @@ package com.mojun.reminder.reminderdataobj;
 
 import java.util.Date;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ReminderEvent {
 	private String userID;
 	private String eventID;
@@ -10,7 +15,7 @@ public class ReminderEvent {
 	private Date creatTime;
 	private Date startTime;
 	private Date endTime;
-	private Date deadLine;
+	private Date deadLine; 
 	private EventPriority eventPriority;
 	private String notes;
 	private int postponeTime;
