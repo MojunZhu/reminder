@@ -12,7 +12,7 @@ import com.mojun.reminder.reminderdataobj.ReminderUser;
 
 public class ReminderProcessor {
 	
-	public static final String SERVICE_CONFIG_PATH = "reminderresource/service/config"; 
+	/*public static final String SERVICE_CONFIG_PATH = "reminderresource/service/config"; 
 	
 	public static ReminderProcessor getDefaultProcessor() {
 		return new ReminderProcessor();
@@ -108,6 +108,6 @@ public class ReminderProcessor {
 		//TO DO 
 		//loop delete all user events first then delete user
 		dbReminderEventDAO.deleteReminderUser(userId);
-	}
+	}*/
 
 }

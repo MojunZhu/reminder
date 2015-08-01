@@ -18,7 +18,7 @@ import com.mojun.reminder.reminderdataobj.ReminderEventList;
 import com.mojun.reminder.reminderdataobj.ReminderUser;
 
 public class ReminderWebResource {
-	@POST
+	/*@POST
 	@Produces({MediaType.APPLICATION_JSON})
 	@Path("/reminderevent/{userId}")
 	public ReminderEvent createReminderEvent(@PathParam("userId") String userId, CreateReminderEventRequest request) {
@@ -90,5 +90,5 @@ public class ReminderWebResource {
 	
 	private static ReminderProcessor getProcessor() {
 		return ReminderProcessor.getDefaultProcessor();
-	}
+	}*/
 }
