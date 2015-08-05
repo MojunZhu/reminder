@@ -1,9 +1,9 @@
 package reminderDB;
 
 import org.bson.types.ObjectId;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mojun.reminder.reminderdataobj.ReminderEvent;
 
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)

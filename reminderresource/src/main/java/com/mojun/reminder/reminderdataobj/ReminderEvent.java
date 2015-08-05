@@ -2,14 +2,15 @@ package com.mojun.reminder.reminderdataobj;
 
 import java.util.Date;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReminderEvent {
-	private String userID;
-	private String eventID;
+	private String userId;
+	private String eventId;
 	private String eventTitle;
 	private EventCategory eventCategory;
 	private Date creatTime;
@@ -22,20 +23,22 @@ public class ReminderEvent {
 	private ReminderRemindMode remindMode;
 	private EventStatus eventStatus;
 	
-	public String getUserID() {
-		return userID;
+	public ReminderEvent() {}
+	
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setUserID(String userID) {
-		this.userID = userID;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
-	public String getEventID() {
-		return eventID;
+	public String getEventId() {
+		return eventId;
 	}
 
-	public void setEventID(String eventID) {
-		this.eventID = eventID;
+	public void setEventId(String eventId) {
+		this.eventId = eventId;
 	}
 
 	public String getEventTitle() {

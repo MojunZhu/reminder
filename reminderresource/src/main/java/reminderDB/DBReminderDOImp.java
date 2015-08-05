@@ -5,13 +5,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.apache.commons.collections.IteratorUtils;
 import org.bson.Document;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.mojun.reminder.exceptions.DataNotFoundException;
 import com.mojun.reminder.reminderdataobj.ReminderEvent;
 import com.mojun.reminder.reminderdataobj.ReminderUser;
@@ -20,7 +22,6 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.util.JSON;
 
 public class DBReminderDOImp implements DBReminderDAO {
 		private static DBReminderDOImp DB_REMINDER_DOIMPL = null;
@@ -29,12 +30,15 @@ public class DBReminderDOImp implements DBReminderDAO {
 		private static MongoDatabase MG_DB;
 		private static MongoCollection<Document> EVENT_COLLECTION;
 		private static MongoCollection<Document> USER_COLLECTION;
+		private static ObjectMapper OBJ_MAP;
 		
 		private DBReminderDOImp() {
 			MG_CLIENT = new MongoClient("127.0.0.1", 27017);
 			MG_DB = MG_CLIENT.getDatabase("ReminderDB");
 			EVENT_COLLECTION = MG_DB.getCollection("EventCollection");
 			USER_COLLECTION = MG_DB.getCollection("UserCollection");
+			OBJ_MAP = new ObjectMapper();
+			OBJ_MAP.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 		}
 	
 		public static DBReminderDOImp getInstance() {
@@ -48,25 +52,33 @@ public class DBReminderDOImp implements DBReminderDAO {
 		
 		public ReminderUser upsertDBReminderUser(ReminderUser user) throws JsonParseException, JsonMappingException, DataNotFoundException, IOException {
 			assert user != null;
-			return upsertUser(user);
+			if(getUserById(user.getUserId()) == null) {
+				return upsertUser(user);
+			} else {
+				return null;
+			}
 		}
 		
-		public ReminderEvent getEventById(String userId, String reminderEventId) throws DataNotFoundException, JsonParseException, JsonMappingException, IOException {
+		public ReminderEvent getEventById(String userId, String reminderEventId) throws JsonParseException, JsonMappingException, IOException {
 			assert userId != null;
 			assert reminderEventId != null;
-			Document document = fetchEvent(userId, reminderEventId);
-			if(document == null) {
-				throw new DataNotFoundException("Cannot find Event Data user:" + userId + " Event:" + reminderEventId);
+			Document document = null;
+			try {
+				document = fetchEvent(userId, reminderEventId);
+			} catch (NoSuchElementException e) {
+				return null;
 			}
 			ReminderEvent reminderEvent = new ObjectMapper().readValue(document.toJson(), ReminderEvent.class);
 			return reminderEvent;
 		}
 		
-		public ReminderUser getUserById(String userId) throws DataNotFoundException, JsonParseException, JsonMappingException, IOException {
+		public ReminderUser getUserById(String userId) throws JsonParseException, JsonMappingException, IOException {
 			assert userId != null;
-			Document document = fetchUser(userId);
-			if(document == null) {
-				throw new DataNotFoundException("Cannot find user Data User: " + userId); 
+			Document document = null;
+			try {
+				document = fetchUser(userId);
+			} catch (NoSuchElementException e) {
+				return null;
 			}
 			ReminderUser reminderUser = new ObjectMapper().readValue(document.toJson(), ReminderUser.class);
 			return reminderUser;
@@ -74,9 +86,11 @@ public class DBReminderDOImp implements DBReminderDAO {
 		
 		public List<ReminderEvent> getEventsById(String userId) throws DataNotFoundException, JsonParseException, JsonMappingException, IOException {
 			assert userId != null;
-			List<Document> documents = fetchEvents(userId);
-			if(documents == null || documents.isEmpty()) {
-				throw new DataNotFoundException("Cannot find user Events, User: " + userId);
+			List<Document> documents = null;
+			try {
+				documents = fetchEvents(userId);
+			} catch (Exception e) {
+				return null;
 			}
 			List<ReminderEvent> result = new ArrayList<>();
 			for(Document document : documents) {
@@ -86,8 +100,12 @@ public class DBReminderDOImp implements DBReminderDAO {
 		}
 		
 		public ReminderEvent upsertDBReminderEvent(ReminderEvent reminderEvent) throws JsonParseException, JsonMappingException, DataNotFoundException, IOException {
-			assert reminderEvent != null;			
-			return upsertEvent(reminderEvent);
+			assert reminderEvent != null;	
+			if(getEventById(reminderEvent.getUserId(), reminderEvent.getEventId())== null) {
+				return upsertEvent(reminderEvent);
+			} else {
+				return null;
+			}
 		}
 		
 		public void deleteReminderEvent(String userId, String reminderEventId) {
@@ -111,9 +129,13 @@ public class DBReminderDOImp implements DBReminderDAO {
 			return updateEvent(reminderEvent);
 		}
 		
+		public void closeDBClient() {
+			MG_CLIENT.close();
+		}
+		
 		private Document fetchEvent(String userId, String reminderEventId) {
 			BasicDBObject cond = new BasicDBObject("userId", userId);
-			cond.append("reminderEventId", reminderEventId);
+			cond.append("eventId", reminderEventId);
 			FindIterable<Document> cursor = EVENT_COLLECTION.find(cond);
 			Document result = cursor.iterator().next();
 			return result;
@@ -141,7 +163,7 @@ public class DBReminderDOImp implements DBReminderDAO {
 			Document document = Document.parse(JSON.serialize(user));
 			USER_COLLECTION.insertOne(document);
 			return getUserById(user.getUserId());*/
-			Document document = Document.parse(JSON.serialize(user));
+			Document document = Document.parse(OBJ_MAP.writeValueAsString(user));
 			USER_COLLECTION.insertOne(document);
 			return getUserById(user.getUserId());
 		}
@@ -152,23 +174,24 @@ public class DBReminderDOImp implements DBReminderDAO {
 			Document document = Document.parse(JSON.serialize(dbEvent));
 			EVENT_COLLECTION.insertOne(document);
 			return getEventById(event.getUserID(), event.getEventID());*/
-			Document document = Document.parse(JSON.serialize(event));
+			Document document = Document.parse(OBJ_MAP.writeValueAsString(event));
 			EVENT_COLLECTION.insertOne(document);
-			return getEventById(event.getUserID(), event.getEventID());
+			return getEventById(event.getUserId(), event.getEventId());
 		}
 		
 		private ReminderUser updateUser(ReminderUser user) throws JsonParseException, JsonMappingException, DataNotFoundException, IOException {
-			Document documentFilter = fetchUser(user.getUserId());
-			Document updateDocument = Document.parse(JSON.serialize(user));
-			USER_COLLECTION.updateOne(documentFilter, updateDocument);
+			Document filterDocument = new Document("userId", user.getUserId());
+			Document updateDocument = Document.parse(OBJ_MAP.writeValueAsString(user));
+			USER_COLLECTION.replaceOne(filterDocument, updateDocument);
 			return getUserById(user.getUserId());
 		}
 		
 		private ReminderEvent updateEvent(ReminderEvent event) throws JsonParseException, JsonMappingException, DataNotFoundException, IOException {
-			Document documentFilter = fetchEvent(event.getUserID(), event.getEventID());
-			Document updateDocument = Document.parse(JSON.serialize(event));
-			EVENT_COLLECTION.updateOne(documentFilter, updateDocument);
-			return getEventById(event.getUserID(), event.getEventID());
+			Document filterDocument = new Document("userId", event.getUserId());
+			filterDocument.append("eventId", event.getEventId());
+			Document updateDocument = Document.parse(OBJ_MAP.writeValueAsString(event));
+			EVENT_COLLECTION.replaceOne(filterDocument, updateDocument);
+			return getEventById(event.getUserId(), event.getEventId());
 		}
 		
 		private void removeUser(String userId) {

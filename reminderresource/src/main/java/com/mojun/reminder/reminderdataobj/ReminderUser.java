@@ -1,7 +1,9 @@
 package com.mojun.reminder.reminderdataobj;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.bson.types.ObjectId;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -10,6 +12,8 @@ public class ReminderUser {
 	private String userName;
 	private String password;
 	private String emailAddress;
+	
+	public ReminderUser() {}
 	
 	public String getUserId() {
 		return userId;
