@@ -1,4 +1,4 @@
-package reminderDB;
+package com.mojun.reminder.reminderdb;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -9,13 +9,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import reminderlib.ReminderProcessor;
-
 import com.mojun.reminder.reminderdataobj.CreateReminderEventRequest;
 import com.mojun.reminder.reminderdataobj.CreateReminderUserRequest;
 import com.mojun.reminder.reminderdataobj.ReminderEvent;
 import com.mojun.reminder.reminderdataobj.ReminderEventList;
 import com.mojun.reminder.reminderdataobj.ReminderUser;
+import com.mojun.reminder.reminderlib.ReminderProcessor;
 
 public class ReminderWebResource {
 	/*@POST

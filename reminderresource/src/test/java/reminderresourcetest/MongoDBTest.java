@@ -8,9 +8,6 @@ import java.util.List;
 import org.bson.Document;
 import org.testng.annotations.Test;
 
-import reminderDB.DBReminderDAO;
-import reminderDB.DBReminderDOImp;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,6 +17,8 @@ import com.mojun.reminder.reminderdataobj.EventPriority;
 import com.mojun.reminder.reminderdataobj.EventStatus;
 import com.mojun.reminder.reminderdataobj.ReminderEvent;
 import com.mojun.reminder.reminderdataobj.ReminderUser;
+import com.mojun.reminder.reminderdb.DBReminderDAO;
+import com.mojun.reminder.reminderdb.DBReminderDOImp;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
@@ -43,7 +42,6 @@ public class MongoDBTest {
 		ReminderUser user = new ReminderUser();
 		user.setPassword("123");
 		user.setEmailAddress("abc@xyz.com");
-		user.setUserId("abc");
 		user.setUserId("abc");
 		ReminderEvent event = new ReminderEvent();
 		Date createDate = new Date();
@@ -108,15 +106,14 @@ public class MongoDBTest {
 		reminderEvent2 = dbReminderDAO.upsertDBReminderEvent(reminderEvent2);
 		// update
 		reminderUser.setUserName("TestV2Update");
-		reminderUser.setUserId("asdfjshdfkjsd");
 		reminderEvent.setEventCategory(EventCategory.PERSONAL_PROJECT);
 		ReminderUser reminderUserUpdate = dbReminderDAO.updateReminderUser(reminderUser);
 		ReminderEvent reminderEventUpdate = dbReminderDAO.updateReminderEvent(reminderEvent);
 		// fetch
 		List<ReminderEvent> reminderEventList = dbReminderDAO.getEventsById(reminderEvent.getUserId());
 		// remove
-		dbReminderDAO.deleteReminderEvent(reminderEvent2.getUserId(), reminderEvent2.getEventId());
-		reminderEvent2 = dbReminderDAO.getEventById(reminderEvent2.getUserId(), reminderEvent2.getEventId());
+		//dbReminderDAO.deleteReminderEvent(reminderEvent2.getUserId(), reminderEvent2.getEventId());
+		//reminderEvent2 = dbReminderDAO.getEventById(reminderEvent2.getUserId(), reminderEvent2.getEventId());
 		dbReminderDAO.deleteReminderUser(reminderEvent2.getUserId());
 		// fetch
 		reminderEvent = dbReminderDAO.getEventById(reminderEvent.getUserId(), reminderEvent.getEventId());

@@ -1,14 +1,14 @@
-package reminderDB;
+package com.mojun.reminder.reminderdb;
 
 import org.bson.types.ObjectId;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.mojun.reminder.reminderdataobj.ReminderEvent;
+import com.mojun.reminder.reminderdataobj.ReminderUser;
 
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DocumentDBEvent extends ReminderEvent{
+public class DocumentDBUser extends ReminderUser{
 	private ObjectId _id;
 
 	public ObjectId get_id() {
