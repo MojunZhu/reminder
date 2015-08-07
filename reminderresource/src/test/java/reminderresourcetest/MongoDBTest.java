@@ -107,6 +107,7 @@ public class MongoDBTest {
 		// update
 		reminderUser.setUserName("TestV2Update");
 		reminderEvent.setEventCategory(EventCategory.PERSONAL_PROJECT);
+		reminderEvent.setUserId("1122334");
 		ReminderUser reminderUserUpdate = dbReminderDAO.updateReminderUser(reminderUser);
 		ReminderEvent reminderEventUpdate = dbReminderDAO.updateReminderEvent(reminderEvent);
 		// fetch

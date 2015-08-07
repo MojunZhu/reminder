@@ -59,7 +59,7 @@ public class DBReminderDOImp implements DBReminderDAO {
 			}
 		}
 		
-		public ReminderEvent getEventById(String userId, String reminderEventId) throws JsonParseException, JsonMappingException, IOException {
+		public ReminderEvent getEventById(String userId, String reminderEventId) throws IOException {
 			assert userId != null;
 			assert reminderEventId != null;
 			Document document = null;
@@ -101,22 +101,26 @@ public class DBReminderDOImp implements DBReminderDAO {
 		
 		public ReminderEvent upsertDBReminderEvent(ReminderEvent reminderEvent) throws JsonParseException, JsonMappingException, DataNotFoundException, IOException {
 			assert reminderEvent != null;	
-			if(getEventById(reminderEvent.getUserId(), reminderEvent.getEventId())== null) {
+			if(getUserById(reminderEvent.getUserId()) != null && getEventById(reminderEvent.getUserId(), reminderEvent.getEventId())== null) {
 				return upsertEvent(reminderEvent);
 			} else {
 				return null;
 			}
 		}
 		
-		public void deleteReminderEvent(String userId, String reminderEventId) {
+		public ReminderEvent deleteReminderEvent(String userId, String reminderEventId) throws IOException {
 			assert userId != null;
 			assert reminderEventId != null;
 			removeEvent(userId, reminderEventId);
+			
+			return getEventById(userId, reminderEventId);
 		}
 		
-		public void deleteReminderUser(String userId) {
+		public ReminderUser deleteReminderUser(String userId) throws JsonParseException, JsonMappingException, IOException {
 			assert userId != null;
 			removeUser(userId);
+			
+			return getUserById(userId);
 		}
 		
 		public ReminderUser updateReminderUser(ReminderUser user) throws JsonParseException, JsonMappingException, DataNotFoundException, IOException {

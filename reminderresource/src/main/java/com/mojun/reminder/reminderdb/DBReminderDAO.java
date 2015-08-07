@@ -26,7 +26,7 @@ public interface DBReminderDAO {
 	
 	public ReminderEvent updateReminderEvent(ReminderEvent reminderEvent) throws JsonParseException, JsonMappingException, DataNotFoundException, IOException;
 	
-	public void deleteReminderEvent(String userId, String reminderEventId);
+	public ReminderEvent deleteReminderEvent(String userId, String reminderEventId) throws IOException;
 	
-	public void deleteReminderUser(String userId);
+	public ReminderUser deleteReminderUser(String userId) throws JsonParseException, JsonMappingException, IOException;
 }

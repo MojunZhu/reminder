@@ -76,6 +76,24 @@ public class ReminderProcessor {
 		return result;
 	}
 	
+	public ReminderUser getReminderUser(String userId) {
+		assert userId != null;
+		
+		ReminderUser result = null;
+		try {
+			result = REMINDER_DAO.getUserById(userId);
+		} catch (DataNotFoundException e) {
+			System.out.println("Data Not Found, no event, user: " + userId);
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
 	public ReminderEventList getReminderEventList(String userId) {
 		assert userId != null;
 		
@@ -129,17 +147,30 @@ public class ReminderProcessor {
 		return result;
 	}
 
-	public void deleteSingleEvent(String userId, String reminderEventId) {
+	public ReminderEvent deleteSingleEvent(String userId, String reminderEventId) {
 		assert userId != null;
 		assert reminderEventId != null;
 		
-		REMINDER_DAO.deleteReminderEvent(userId, reminderEventId);
+		ReminderEvent result = null;
+		try {
+			result = REMINDER_DAO.deleteReminderEvent(userId, reminderEventId);
+		} catch (IOException e) {
+			result = new ReminderEvent();
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
-	public void deleteUser(String userId) {
+	public ReminderUser deleteUser(String userId) {
 		assert userId != null;
-		
-		REMINDER_DAO.deleteReminderUser(userId);
+		ReminderUser result = null;
+		try {
+			REMINDER_DAO.deleteReminderUser(userId);
+		} catch (IOException e) {
+			result = new ReminderUser();
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 }
