@@ -49,7 +49,7 @@ public class ReminderWebResource {
 		try {
 			return Response.ok(OBJ_MAP.writeValueAsString(reminderEvent), MediaType.APPLICATION_JSON).build();
 		} catch (JsonProcessingException e) {
-			return Response.serverError().entity("parsing json error" + e.getMessage()).build();			
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("parsing json error" + e.getMessage()).build();			
 		}
 	}
 	
@@ -69,7 +69,7 @@ public class ReminderWebResource {
 		try {
 			return Response.ok(OBJ_MAP.writeValueAsString(reminderUser), MediaType.APPLICATION_JSON).build();
 		} catch (JsonProcessingException e) {
-			return Response.serverError().entity("parsing json error" + e.getMessage()).build();			
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("parsing json error" + e.getMessage()).build();			
 		}
 	}
 	
@@ -79,17 +79,17 @@ public class ReminderWebResource {
 	public Response getSingleEvent(@PathParam("userId") String userId, @PathParam("reminderEventId") String reminderEventId) {
 		
 		if(userId == null || reminderEventId == null) {
-			return Response.serverError().entity("userId cannot be null").build();
+			return Response.status(Response.Status.BAD_REQUEST).entity("userId cannot be null").build();
 		}
 		ReminderEvent event = PROCESSOR.getSingleReminderEvent(userId, reminderEventId);
 		if(event == null) {
-			return Response.status(Response.Status.NOT_FOUND).entity("event userId:" + userId + " eventId: " + reminderEventId + " is not found").build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("event userId:" + userId + " eventId: " + reminderEventId + " is not found").build();
 		}
 		
 		try {
 			return Response.ok(OBJ_MAP.writeValueAsString(event), MediaType.APPLICATION_JSON).build();
 		} catch (JsonProcessingException e) {
-			return Response.serverError().entity("parsing json error" + e.getMessage()).build();			
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("parsing json error" + e.getMessage()).build();			
 		}
 	}
 	
@@ -99,17 +99,17 @@ public class ReminderWebResource {
 	public Response getEventList(@PathParam("userId") String userId) {
 		
 		if(userId == null) {
-			return Response.serverError().entity("userId cannot be null").build();
+			return Response.status(Response.Status.BAD_REQUEST).entity("userId cannot be null").build();
 		}
 		ReminderEventList eventList = PROCESSOR.getReminderEventList(userId);
 		if(eventList == null) {
-			return Response.status(Response.Status.NOT_FOUND).entity("User :" + userId + " is not found").build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("User :" + userId + " is not found").build();
 		}
 		
 		try {
 			return Response.ok(OBJ_MAP.writeValueAsString(eventList), MediaType.APPLICATION_JSON).build();
 		} catch (JsonProcessingException e) {
-			return Response.serverError().entity("parsing json error" + e.getMessage()).build();			
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("parsing json error" + e.getMessage()).build();			
 		}
 	}
 	
@@ -118,17 +118,17 @@ public class ReminderWebResource {
 	@Path("/user/{userId}")
 	public Response getUser(@PathParam("userId") String userId) {
 		if(userId == null) {
-			return Response.serverError().entity("userId cannot be null").build();
+			return Response.status(Response.Status.BAD_REQUEST).entity("userId cannot be null").build();
 		}
 		ReminderUser user = PROCESSOR.getReminderUser(userId);
 		if(user == null) {
-			return Response.status(Response.Status.NOT_FOUND).entity("User :" + userId + " is not found").build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("User :" + userId + " is not found").build();
 		}
 		
 		try {
 			return Response.ok(OBJ_MAP.writeValueAsString(user), MediaType.APPLICATION_JSON).build();
 		} catch (JsonProcessingException e) {
-			return Response.serverError().entity("parsing json error" + e.getMessage()).build();			
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("parsing json error" + e.getMessage()).build();			
 		}
 	}
 	
@@ -139,16 +139,16 @@ public class ReminderWebResource {
 	public Response updateSingleEvent(@PathParam("userId") String userId, @PathParam("reminderEventId") String reminderEventId, ReminderEvent event) {
 		
 		if(userId == null || reminderEventId == null || event == null) {
-			return Response.serverError().entity("userId/reminderEventId/event cannot be null").build();
+			return Response.status(Response.Status.BAD_REQUEST).entity("userId/reminderEventId/event cannot be null").build();
 		}
 		ReminderEvent reminderEvent = PROCESSOR.updateSingleEvent(event);
 		if(reminderEvent == null) {
-			return Response.serverError().entity("User/event not exist or upsert error").build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("User/event not exist or upsert error").build();
 		}
 		try {
 			return Response.ok(OBJ_MAP.writeValueAsString(reminderEvent), MediaType.APPLICATION_JSON).build();
 		} catch (JsonProcessingException e) {
-			return Response.serverError().entity("parsing json error" + e.getMessage()).build();			
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("parsing json error" + e.getMessage()).build();			
 		}
 	}
 	
@@ -161,16 +161,16 @@ public class ReminderWebResource {
 	public Response updateReminderUser(@PathParam("userId") String userId, ReminderUser user) {
 		
 		if(userId == null || user == null) {
-			return Response.serverError().entity("userId/user cannot be null").build();
+			return Response.status(Response.Status.BAD_REQUEST).entity("userId/user cannot be null").build();
 		}
 		ReminderUser reminderUser = PROCESSOR.updateReminderUser(user);
 		if(reminderUser == null) {
-			return Response.serverError().entity("User not exist or update error").build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("User not exist or update error").build();
 		}
 		try {
 			return Response.ok(OBJ_MAP.writeValueAsString(reminderUser), MediaType.APPLICATION_JSON).build();
 		} catch (JsonProcessingException e) {
-			return Response.serverError().entity("parsing json error" + e.getMessage()).build();			
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("parsing json error" + e.getMessage()).build();			
 		}
 	}
 	
@@ -179,11 +179,11 @@ public class ReminderWebResource {
 	@Path("/event/{userId}/{reminderEventId}")
 	public Response deleteSingleEvent (@PathParam("userId") String userId, @PathParam("reminderEventId") String reminderEventId) {
 		if(userId == null || reminderEventId == null) {
-			return Response.serverError().entity("userId/reminderEventId cannot be null").build();
+			return Response.status(Response.Status.BAD_REQUEST).entity("userId/reminderEventId cannot be null").build();
 		}
 		ReminderEvent reminderEvent = PROCESSOR.deleteSingleEvent(userId, reminderEventId);
 		if(reminderEvent != null) {
-			return Response.serverError().entity("Event not exist or delete error").build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Event not exist or delete error").build();
 		}
 		return Response.ok("delete complete").build();
 	}
@@ -193,11 +193,11 @@ public class ReminderWebResource {
 	@Path("/user/{userId}")
 	public Response deleteUser(@PathParam("userId") String userId) {
 		if(userId == null) {
-			return Response.serverError().entity("userId cannot be null").build();
+			return Response.status(Response.Status.BAD_REQUEST).entity("userId cannot be null").build();
 		}
 		ReminderUser reminderUser = PROCESSOR.deleteUser(userId);
 		if(reminderUser != null) {
-			return Response.serverError().entity("User not exist or delete error").build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("User not exist or delete error").build();
 		}
 		return Response.ok("delete complete").build();
 	}
