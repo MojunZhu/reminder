@@ -9,6 +9,7 @@
             <param-name>jersey.config.server.provider.packages</param-name>
             <param-value>com.mojun.reminder.reminderresource</param-value>
         </init-param>
+     
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>

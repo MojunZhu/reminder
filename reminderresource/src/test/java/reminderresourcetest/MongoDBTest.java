@@ -9,6 +9,7 @@ import org.bson.Document;
 import org.testng.annotations.Test;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mojun.reminder.exceptions.DataNotFoundException;
@@ -119,5 +120,35 @@ public class MongoDBTest {
 		// fetch
 		reminderEvent = dbReminderDAO.getEventById(reminderEvent.getUserId(), reminderEvent.getEventId());
 		reminderUser = dbReminderDAO.getUserById("jskjdkf");
+	}
+	
+	@Test
+	public void mappToJson() throws JsonProcessingException {
+		ObjectMapper objMap = new ObjectMapper();
+		ReminderUser user = new ReminderUser();
+		user.setPassword("123");
+		user.setEmailAddress("abc@xyz.com");
+		user.setUserId("TestV2");
+		user.setUserName("TestV2");
+		ReminderEvent event = new ReminderEvent();
+		Date createDate = new Date();
+		Date deadLine = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.set(2015, 11, 11, 11, 20);
+		deadLine = cal.getTime();
+		event.setCreatTime(createDate);
+		event.setDeadLine(deadLine);
+		event.setEventCategory(EventCategory.WORK_EVENT);
+		event.setEventId("TestEventV2");
+		event.setEventPriority(EventPriority.MUST_DONE_IN_TIME);
+		event.setEventStatus(EventStatus.IN_PROCESS);
+		event.setEventTitle("TestEventV2");
+		event.setUserId("TestV2");
+		String userString = objMap.writeValueAsString(user);
+		String eventString = objMap.writeValueAsString(event);
+		System.out.println(userString);
+		System.out.println(eventString);
+		
+		System.out.println("Done");
 	}
 }

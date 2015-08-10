@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.mojun.reminder.exceptions.DataNotFoundException;
 import com.mojun.reminder.reminderdataobj.ReminderEvent;
+import com.mojun.reminder.reminderdataobj.ReminderEventList;
 import com.mojun.reminder.reminderdataobj.ReminderUser;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
@@ -84,7 +85,7 @@ public class DBReminderDOImp implements DBReminderDAO {
 			return reminderUser;
 		}
 		
-		public List<ReminderEvent> getEventsById(String userId) throws DataNotFoundException, JsonParseException, JsonMappingException, IOException {
+		public ReminderEventList getEventsById(String userId) throws DataNotFoundException, JsonParseException, JsonMappingException, IOException {
 			assert userId != null;
 			List<Document> documents = null;
 			try {
@@ -92,7 +93,7 @@ public class DBReminderDOImp implements DBReminderDAO {
 			} catch (Exception e) {
 				return null;
 			}
-			List<ReminderEvent> result = new ArrayList<>();
+			ReminderEventList result = new ReminderEventList();
 			for(Document document : documents) {
 				result.add(new ObjectMapper().readValue(document.toJson(), ReminderEvent.class));
 			}

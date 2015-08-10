@@ -99,7 +99,7 @@ public class ReminderProcessor {
 		
 		ReminderEventList result = null;
 		try {
-			result = (ReminderEventList) REMINDER_DAO.getEventsById(userId);
+			result = REMINDER_DAO.getEventsById(userId);
 		} catch (DataNotFoundException e) {
 			System.out.println("Data Not Found, no event, user: " + userId);
 			System.out.println(e.getMessage());

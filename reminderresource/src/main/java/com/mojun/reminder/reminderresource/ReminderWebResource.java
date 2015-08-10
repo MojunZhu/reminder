@@ -1,5 +1,7 @@
 package com.mojun.reminder.reminderresource;
 
+import javax.net.ssl.SSLEngineResult.Status;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -24,16 +26,24 @@ public class ReminderWebResource {
 	private static ReminderProcessor PROCESSOR = ReminderProcessor.getDefaultProcessor();
 	private static ObjectMapper OBJ_MAP = new ObjectMapper();
 	
+	@GET
+    @Produces(MediaType.TEXT_PLAIN)
+	@Path("/getit")
+    public String getIt() {
+        return "Got it!";
+    }
+	
 	@PUT
+	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
 	@Path("/event/{userId}")
 	public Response createReminderEvent(@PathParam("userId") String userId, ReminderEvent event) {
 		if(userId == null || event == null) {
-			return Response.serverError().entity("userId cannot be null").build();
+			return Response.status(Response.Status.BAD_REQUEST).entity("UserId can not be null").build();
 		}
 		ReminderEvent reminderEvent = PROCESSOR.createReminderEvent(event);
 		if(reminderEvent == null) {
-			return Response.status(Response.Status.NOT_FOUND).entity("User :" + userId + " is not found or event:" + event.getEventId() + " is existed").build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("User :" + userId + " is not found or event:" + event.getEventId() + " is existed").build();
 		}
 		
 		try {
@@ -44,12 +54,13 @@ public class ReminderWebResource {
 	}
 	
 	@PUT
+	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
 	@Path("/user")
 	public Response createReminderUser(ReminderUser	user) {
 		
 		if(user == null) {
-			return Response.serverError().entity("userId cannot be null").build();
+			return Response.status(Response.Status.BAD_REQUEST).entity("UserId can not be null").build();
 		}
 		ReminderUser reminderUser = PROCESSOR.createReminderUser(user);
 		if(reminderUser == null) {
@@ -145,6 +156,7 @@ public class ReminderWebResource {
 	
 	@PUT
 	@Produces({MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.APPLICATION_JSON})
 	@Path("/user/{userId}") 
 	public Response updateReminderUser(@PathParam("userId") String userId, ReminderUser user) {
 		
@@ -179,7 +191,7 @@ public class ReminderWebResource {
 	@DELETE
 	@Produces({MediaType.APPLICATION_JSON})
 	@Path("/user/{userId}")
-	public Response deleteUser(@PathParam("userUd") String userId) {
+	public Response deleteUser(@PathParam("userId") String userId) {
 		if(userId == null) {
 			return Response.serverError().entity("userId cannot be null").build();
 		}

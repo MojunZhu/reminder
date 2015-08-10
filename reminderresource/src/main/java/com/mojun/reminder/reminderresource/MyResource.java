@@ -15,7 +15,7 @@ import com.mojun.reminder.reminderlib.ReminderProcessor;
 /**
  * Root resource (exposed at "myresource" path)
  */
-@Path("reminder")
+@Path("getit")
 public class MyResource {
 	
 	private static ReminderProcessor reminderProcessor = ReminderProcessor.getDefaultProcessor(); 

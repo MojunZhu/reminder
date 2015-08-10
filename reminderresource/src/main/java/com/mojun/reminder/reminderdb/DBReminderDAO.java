@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.mojun.reminder.exceptions.DataNotFoundException;
 import com.mojun.reminder.reminderdataobj.ReminderEvent;
+import com.mojun.reminder.reminderdataobj.ReminderEventList;
 import com.mojun.reminder.reminderdataobj.ReminderUser;
 
 public interface DBReminderDAO {
@@ -18,7 +19,7 @@ public interface DBReminderDAO {
 	
 	public ReminderUser getUserById(String userId) throws DataNotFoundException, JsonParseException, JsonMappingException, IOException;
 	
-	public List<ReminderEvent> getEventsById(String userId) throws DataNotFoundException, JsonParseException, JsonMappingException, IOException;
+	public ReminderEventList getEventsById(String userId) throws DataNotFoundException, JsonParseException, JsonMappingException, IOException;
 	
 	public ReminderEvent upsertDBReminderEvent(ReminderEvent reminderEvent) throws JsonParseException, JsonMappingException, DataNotFoundException, IOException;
 	

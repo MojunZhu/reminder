@@ -2,12 +2,12 @@
 <testng-results skipped="0" failed="0" total="1" passed="1">
   <reporter-output>
   </reporter-output>
-  <suite name="Default suite" duration-ms="83603" started-at="2015-08-05T12:21:34Z" finished-at="2015-08-05T12:22:58Z">
+  <suite name="Default suite" duration-ms="251" started-at="2015-08-09T15:56:20Z" finished-at="2015-08-09T15:56:21Z">
     <groups>
     </groups>
-    <test name="Default test" duration-ms="83603" started-at="2015-08-05T12:21:34Z" finished-at="2015-08-05T12:22:58Z">
+    <test name="Default test" duration-ms="251" started-at="2015-08-09T15:56:20Z" finished-at="2015-08-09T15:56:21Z">
       <class name="reminderresourcetest.MongoDBTest">
-        <test-method status="PASS" signature="testDOIAPImp()" name="testDOIAPImp" duration-ms="83580" started-at="2015-08-05T12:21:34Z" finished-at="2015-08-05T12:22:58Z">
+        <test-method status="PASS" signature="mappToJson()" name="mappToJson" duration-ms="233" started-at="2015-08-09T15:56:21Z" finished-at="2015-08-09T15:56:21Z">
         </test-method>
       </class>
     </test>
