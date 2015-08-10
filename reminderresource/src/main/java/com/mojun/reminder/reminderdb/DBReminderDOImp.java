@@ -1,7 +1,6 @@
 package com.mojun.reminder.reminderdb;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +34,7 @@ public class DBReminderDOImp implements DBReminderDAO {
 		
 		private DBReminderDOImp() {
 			MG_CLIENT = new MongoClient("127.0.0.1", 27017);
-			MG_DB = MG_CLIENT.getDatabase("ReminderDB");
+			MG_DB = MG_CLIENT.getDatabase(DB_NAME);
 			EVENT_COLLECTION = MG_DB.getCollection("EventCollection");
 			USER_COLLECTION = MG_DB.getCollection("UserCollection");
 			OBJ_MAP = new ObjectMapper();
@@ -134,7 +133,11 @@ public class DBReminderDOImp implements DBReminderDAO {
 			return updateEvent(reminderEvent);
 		}
 		
-		public void closeDBClient() {
+		protected void finalize() {
+			closeDBClient();
+		}
+		
+		private void closeDBClient() {
 			MG_CLIENT.close();
 		}
 		
