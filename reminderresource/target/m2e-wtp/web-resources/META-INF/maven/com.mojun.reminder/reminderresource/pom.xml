@@ -91,7 +91,24 @@
 			<artifactId>commons-collections</artifactId>
 			<version>3.2.1</version>
 		</dependency>
-
+		<!-- Spring security -->
+    	<dependency>
+        	<groupId>org.springframework.security</groupId>
+        	<artifactId>spring-security-web</artifactId>
+        	<version>4.0.2.RELEASE</version>
+    	</dependency>
+    	<dependency>
+    		<groupId>org.springframework.security</groupId>
+    		<artifactId>spring-security-config</artifactId>
+    		<version>4.0.2.RELEASE</version>
+  		</dependency>
+  		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<!-- Security end -->
+		
 	</dependencies>
     <properties>
         <jersey.version>2.19</jersey.version>
