@@ -29,6 +29,13 @@ public class ReminderWebResource {
         return "Got it!";
     }
 	
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	@Path("/images")
+	public String getImage() {
+		return "Got your image";
+	}
+	
 	@PUT
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})

@@ -26,19 +26,23 @@ import com.mongodb.client.MongoDatabase;
 public class DBReminderDOImp implements DBReminderDAO {
 		private static DBReminderDOImp DB_REMINDER_DOIMPL = null;
 		private static String DB_NAME = "ReminderDB";
-		private static MongoClient MG_CLIENT;
+		private static MongoClient MG_CLIENT = new MongoClient("127.0.0.1", 27017);
 		private static MongoDatabase MG_DB;
 		private static MongoCollection<Document> EVENT_COLLECTION;
 		private static MongoCollection<Document> USER_COLLECTION;
 		private static ObjectMapper OBJ_MAP;
 		
 		private DBReminderDOImp() {
-			MG_CLIENT = new MongoClient("127.0.0.1", 27017);
+			//MG_CLIENT = new MongoClient("127.0.0.1", 27017);
 			MG_DB = MG_CLIENT.getDatabase(DB_NAME);
 			EVENT_COLLECTION = MG_DB.getCollection("EventCollection");
 			USER_COLLECTION = MG_DB.getCollection("UserCollection");
 			OBJ_MAP = new ObjectMapper();
 			OBJ_MAP.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+		}
+		
+		public static MongoClient getMongoClient() {
+			return MG_CLIENT;
 		}
 	
 		public static DBReminderDOImp getInstance() {

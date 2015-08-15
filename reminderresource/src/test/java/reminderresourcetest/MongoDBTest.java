@@ -1,11 +1,13 @@
 package reminderresourcetest;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.bson.Document;
+import org.springframework.security.core.GrantedAuthority;
 import org.testng.annotations.Test;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -20,6 +22,8 @@ import com.mojun.reminder.reminderdataobj.ReminderEvent;
 import com.mojun.reminder.reminderdataobj.ReminderUser;
 import com.mojun.reminder.reminderdb.DBReminderDAO;
 import com.mojun.reminder.reminderdb.DBReminderDOImp;
+import com.mojun.reminder.springsecurity.config.AuthorityRoles;
+import com.mojun.reminder.springsecurity.config.AuthticateUsers;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
@@ -31,6 +35,7 @@ public class MongoDBTest {
 	private static final long DB_PORT = 27017;
 	private static final String USER_COLLECTION_NAME = "UserCollection";
 	private static final String EVENT_COLLECTION_NAME = "EventCollection";
+	private static final String LOGIN_COLLECTION_NAME = "UserLogin";
 	
 	@SuppressWarnings("unused")
 	@Test
@@ -150,5 +155,23 @@ public class MongoDBTest {
 		System.out.println(eventString);
 		
 		System.out.println("Done");
+	}
+	
+	@Test
+	public void addLogInUser() throws JsonProcessingException {
+		AuthticateUsers aus = new AuthticateUsers();
+		aus.setUserId("LogInV1");
+		aus.setPassowrd("password");
+		List<AuthorityRoles> roles = new ArrayList<>();
+		AuthorityRoles role1 = new AuthorityRoles("user");
+		AuthorityRoles role2 = new AuthorityRoles("costumer");
+		roles.add(role1);
+		roles.add(role2);
+		aus.setRoles(roles);
+		MongoClient mg_client = new MongoClient("127.0.0.1", 27017);
+		MongoDatabase mg_db = mg_client.getDatabase("ReminderDB");
+		MongoCollection<Document> mg_collection = mg_db.getCollection(LOGIN_COLLECTION_NAME);
+		Document document = Document.parse(new ObjectMapper().writeValueAsString(aus));
+		mg_collection.insertOne(document);
 	}
 }

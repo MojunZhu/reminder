@@ -5,7 +5,7 @@
     <classes>
       <class name="reminderresourcetest.MongoDBTest">
         <methods>
-          <include name="testDOIAPImp"/>
+          <include name="upsertIntoDB"/>
         </methods>
       </class>
     </classes>
