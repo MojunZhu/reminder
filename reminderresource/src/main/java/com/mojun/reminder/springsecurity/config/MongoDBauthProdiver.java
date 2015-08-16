@@ -1,17 +1,15 @@
 package com.mojun.reminder.springsecurity.config;
 
 import org.bson.Document;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mojun.reminder.reminderlib.ReminderProcessor;
-import com.mojun.reminder.reminderdataobj.ReminderUser;
 import com.mojun.reminder.reminderdb.DBReminderDOImp;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
@@ -19,6 +17,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
+@Repository
 public class MongoDBauthProdiver extends AbstractUserDetailsAuthenticationProvider {
 	private static String DB_NAME = "ReminderDB";
 	private static String COLLECTION_NAME = "UserLogin";
