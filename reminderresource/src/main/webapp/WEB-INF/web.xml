@@ -16,24 +16,7 @@
         <servlet-name>Jersey Web Application</servlet-name>
         <url-pattern>/webapi/*</url-pattern>
     </servlet-mapping>
-    <!-- This part 11111111 is not necessary when use java config to register spring security -->
-    <!--Hook into spring security-->
-    <!--<context-param>  
-        <param-name>contextConfigLocation</param-name>  
-        <param-value>com.mojun.reminder.springsecurity.config.SecurityConfig</param-value>  
-    </context-param> -->
-	<!--<filter>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-	</filter>
- 
-	<filter-mapping>
-  		<filter-name>springSecurityFilterChain</filter-name>
-  		<url-pattern>/webapi/*</url-pattern>
-	</filter-mapping>-->
-	
-	<!--<listener>  
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>  
-    </listener>-->
-	<!-- 11111111 -->
+    <session-config>
+ 		 <session-timeout>1</session-timeout>
+	</session-config>
 </web-app>
