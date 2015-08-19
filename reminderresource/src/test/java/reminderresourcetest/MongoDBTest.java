@@ -84,7 +84,7 @@ public class MongoDBTest {
 	public void testDOIAPImp() throws JsonParseException, JsonMappingException, DataNotFoundException, IOException {
 		DBReminderDAO dbReminderDAO = DBReminderDOImp.getInstance();
 		// prepare for test data 
-		ReminderUser user = new ReminderUser();
+		/*ReminderUser user = new ReminderUser();
 		user.setPassword("123");
 		user.setEmailAddress("abc@xyz.com");
 		user.setUserId("TestV2");
@@ -124,13 +124,16 @@ public class MongoDBTest {
 		dbReminderDAO.deleteReminderUser(reminderEvent2.getUserId());
 		// fetch
 		reminderEvent = dbReminderDAO.getEventById(reminderEvent.getUserId(), reminderEvent.getEventId());
-		reminderUser = dbReminderDAO.getUserById("jskjdkf");
+		reminderUser = dbReminderDAO.getUserById("jskjdkf");*/
+		ReminderUser reminderUser = dbReminderDAO.getUserById("abc");
+		
+		System.out.print("done");
 	}
 	
 	@Test
 	public void mappToJson() throws JsonProcessingException {
 		ObjectMapper objMap = new ObjectMapper();
-		ReminderUser user = new ReminderUser();
+		/*ReminderUser user = new ReminderUser();
 		user.setPassword("123");
 		user.setEmailAddress("abc@xyz.com");
 		user.setUserId("TestV2");
@@ -154,7 +157,8 @@ public class MongoDBTest {
 		System.out.println(userString);
 		System.out.println(eventString);
 		
-		System.out.println("Done");
+		System.out.println("Done");*/
+		
 	}
 	
 	@Test

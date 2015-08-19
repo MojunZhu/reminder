@@ -13,6 +13,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.mojun.mongodb.MongoDBBasic;
 import com.mojun.reminder.exceptions.DataNotFoundException;
 import com.mojun.reminder.reminderdataobj.ReminderEvent;
 import com.mojun.reminder.reminderdataobj.ReminderEventList;
@@ -23,17 +24,17 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
-public class DBReminderDOImp implements DBReminderDAO {
+public class DBReminderDOImp extends MongoDBBasic implements DBReminderDAO {
 		private static DBReminderDOImp DB_REMINDER_DOIMPL = null;
 		private static String DB_NAME = "ReminderDB";
-		private static MongoClient MG_CLIENT = new MongoClient("127.0.0.1", 27017);
 		private static MongoDatabase MG_DB;
 		private static MongoCollection<Document> EVENT_COLLECTION;
 		private static MongoCollection<Document> USER_COLLECTION;
 		private static ObjectMapper OBJ_MAP;
 		
 		private DBReminderDOImp() {
-			//MG_CLIENT = new MongoClient("127.0.0.1", 27017);
+			//create Mongo client
+			super.MONGOCLIENTINITIALIZER();
 			MG_DB = MG_CLIENT.getDatabase(DB_NAME);
 			EVENT_COLLECTION = MG_DB.getCollection("EventCollection");
 			USER_COLLECTION = MG_DB.getCollection("UserCollection");
@@ -154,7 +155,8 @@ public class DBReminderDOImp implements DBReminderDAO {
 		}
 		
 		private Document fetchUser(String userId) {
-			BasicDBObject cond = new BasicDBObject("userId", userId);
+			//BasicDBObject cond = new BasicDBObject("userId", userId);
+			Document cond = new Document("userId", userId);
 			FindIterable<Document> cursor = USER_COLLECTION.find(cond);
 			Document result = cursor.iterator().next();
 			return result;
