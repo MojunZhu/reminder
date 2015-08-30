@@ -35,6 +35,8 @@ public class MongoDBauthProdiver extends AbstractUserDetailsAuthenticationProvid
 			throw new InternalAuthenticationServiceException(e.getMessage(), e);
 		}
 		
+		System.out.println(loadedUser.getAuthorities());
+		
 		return loadedUser;
 	}
 }

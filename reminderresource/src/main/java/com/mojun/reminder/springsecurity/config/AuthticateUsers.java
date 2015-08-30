@@ -1,12 +1,12 @@
 package com.mojun.reminder.springsecurity.config;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class AuthticateUsers {
 	
 	public String userId;
@@ -14,6 +14,20 @@ public class AuthticateUsers {
 	public List<AuthorityRoles> roles;
 	
 	public AuthticateUsers() {}
+	
+	public AuthticateUsers(AuthenticateUserDBRecord dbRecord) {
+		if(dbRecord == null) {
+			return;
+		}
+		this.userId = dbRecord.getUserId();
+		this.passowrd = dbRecord.getPassowrd();
+		List<AuthorityRoles> roleList = new ArrayList<>();
+		String[] roleArray = dbRecord.getRoles().split(",");
+		for(String str : roleArray){
+			roleList.add(new AuthorityRoles(str.trim()));
+		}
+		this.roles = roleList;
+	}
 	
 	public String getUserId() {
 		return userId;

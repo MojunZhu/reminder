@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite hostname="LM-SEA-00877773" name="reminderresourcetest.MongoDBTest" tests="1" failures="0" timestamp="16 Aug 2015 00:28:51 GMT" time="0.63" errors="0">
-  <testcase name="addLogInUser" time="0.611" classname="reminderresourcetest.MongoDBTest"/>
+<testsuite hostname="LM-SEA-00877773" name="reminderresourcetest.MongoDBTest" tests="1" failures="0" timestamp="22 Aug 2015 21:30:59 GMT" time="0.64" errors="0">
+  <testcase name="addLogInUser" time="0.627" classname="reminderresourcetest.MongoDBTest"/>
 </testsuite>

@@ -4,6 +4,9 @@ import java.awt.image.ImagingOpException;
 import java.io.IOException;
 import java.util.List;
 
+import org.aspectj.lang.annotation.Aspect;
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import com.mojun.reminder.exceptions.DataNotFoundException;
 import com.mojun.reminder.reminderdataobj.CreateReminderEventRequest;
 import com.mojun.reminder.reminderdataobj.CreateReminderUserRequest;
@@ -13,6 +16,7 @@ import com.mojun.reminder.reminderdataobj.ReminderUser;
 import com.mojun.reminder.reminderdb.DBReminderDAO;
 import com.mojun.reminder.reminderdb.DBReminderDOImp;
 
+@Aspect
 public class ReminderProcessor {
 	
 	public static final String SERVICE_CONFIG_PATH = "reminderresource/service/config"; 

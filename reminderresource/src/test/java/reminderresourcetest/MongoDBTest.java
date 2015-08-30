@@ -22,6 +22,7 @@ import com.mojun.reminder.reminderdataobj.ReminderEvent;
 import com.mojun.reminder.reminderdataobj.ReminderUser;
 import com.mojun.reminder.reminderdb.DBReminderDAO;
 import com.mojun.reminder.reminderdb.DBReminderDOImp;
+import com.mojun.reminder.springsecurity.config.AuthenticateUserDBRecord;
 import com.mojun.reminder.springsecurity.config.AuthorityRoles;
 import com.mojun.reminder.springsecurity.config.AuthticateUsers;
 import com.mongodb.BasicDBObject;
@@ -163,19 +164,21 @@ public class MongoDBTest {
 	
 	@Test
 	public void addLogInUser() throws JsonProcessingException {
-		AuthticateUsers aus = new AuthticateUsers();
-		aus.setUserId("LogInV1");
+		AuthenticateUserDBRecord aus = new AuthenticateUserDBRecord();
+		aus.setUserId("LogInV1.3");
 		aus.setPassowrd("password");
-		List<AuthorityRoles> roles = new ArrayList<>();
-		AuthorityRoles role1 = new AuthorityRoles("user");
-		AuthorityRoles role2 = new AuthorityRoles("costumer");
-		roles.add(role1);
-		roles.add(role2);
-		aus.setRoles(roles);
+		aus.setRoles("ROLE_CUSTOMER");
+		AuthenticateUserDBRecord aus2 = new AuthenticateUserDBRecord();
+		aus2.setUserId("LogInV1.1");
+		aus2.setPassowrd("passowrd");
+		aus2.setRoles("ROLE_CAST");
 		MongoClient mg_client = new MongoClient("127.0.0.1", 27017);
 		MongoDatabase mg_db = mg_client.getDatabase("ReminderDB");
 		MongoCollection<Document> mg_collection = mg_db.getCollection(LOGIN_COLLECTION_NAME);
 		Document document = Document.parse(new ObjectMapper().writeValueAsString(aus));
+		Document document2 = Document.parse(new ObjectMapper().writeValueAsString(aus2));
 		mg_collection.insertOne(document);
+		mg_collection.insertOne(document2);
+		
 	}
 }

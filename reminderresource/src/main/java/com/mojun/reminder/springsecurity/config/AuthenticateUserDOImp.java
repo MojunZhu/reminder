@@ -38,8 +38,8 @@ public class AuthenticateUserDOImp extends MongoDBBasic{
 	
 	public AuthticateUsers getAuthenticateUserById(String userId) throws JsonParseException, JsonMappingException, IOException {
 		Document userDocument = fetchUser(userId);
-		AuthticateUsers user = OBJ_MAP.readValue(userDocument.toJson(), AuthticateUsers.class);
-		return user;
+		AuthenticateUserDBRecord userDBRecord = OBJ_MAP.readValue(userDocument.toJson(), AuthenticateUserDBRecord.class);
+		return new AuthticateUsers(userDBRecord);
 	}
 	
 	private Document fetchUser(String userId) {
