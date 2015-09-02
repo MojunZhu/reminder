@@ -3,6 +3,7 @@ package com.mojun.reminder.reminderresource;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -12,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.apache.tomcat.util.descriptor.web.LoginConfig;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
@@ -23,6 +25,7 @@ import com.mojun.reminder.reminderdataobj.ReminderEvent;
 import com.mojun.reminder.reminderdataobj.ReminderEventList;
 import com.mojun.reminder.reminderdataobj.ReminderUser;
 import com.mojun.reminder.reminderlib.ReminderProcessor;
+import com.mojun.reminder.springsecurity.config.MongoDBauthProdiver;
 
 @Service
 @Path("reminder")
