@@ -1,6 +1,7 @@
 package com.mojun.reminder.reminderClient;
 
 
+import java.io.IOException;
 import java.util.Map;
 
 import javax.ws.rs.client.Client;
@@ -13,10 +14,14 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
+import org.glassfish.jersey.client.ClientProperties;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.testng.annotations.Test;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mojun.reminder.reminderdataobj.ReminderUser;
 
 
 public class ReminderClient {
@@ -24,6 +29,8 @@ public class ReminderClient {
 	private String csrfToken = null;
 	private Map<String, NewCookie> cookies = null;
 	private Client client = ClientBuilder.newClient();
+	private ObjectMapper OBJ_MAP = new ObjectMapper();
+
 	//login operation
 	// first get the csrf token
 	
@@ -37,6 +44,7 @@ public class ReminderClient {
 		
 		// login with csrf token and user credentials 
 		WebTarget logInTarget = client.target(BASE_URL).path("webapi/login");
+		logInTarget.property(ClientProperties.FOLLOW_REDIRECTS, false);
 		MultivaluedHashMap<String, String> valueForm = new MultivaluedHashMap<>();
 		valueForm.add("username", userName);
 		valueForm.add("password", passWord);
@@ -65,6 +73,24 @@ public class ReminderClient {
 	}
 	
 	//get operation
+	public ReminderUser getReminderUser(String userId) {
+		WebTarget getUserTarget = client.target(BASE_URL).path("webapi/reminder/user/").path(userId);
+		Invocation.Builder getUserBuilder = getUserTarget.request(MediaType.APPLICATION_JSON);
+		for(NewCookie cookie : cookies.values()) {
+			getUserBuilder.cookie(cookie);
+		}
+		Response getUserResponse = getUserBuilder.get();
+		getUserResponse.bufferEntity();
+		String response = getUserResponse.readEntity(String.class);
+		ReminderUser user = null;
+		try {
+			user = OBJ_MAP.readValue(response, ReminderUser.class);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return user;
+	}
 		
 	//post operation
 		

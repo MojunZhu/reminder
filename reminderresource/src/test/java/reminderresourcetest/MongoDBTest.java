@@ -177,8 +177,9 @@ public class MongoDBTest {
 		MongoCollection<Document> mg_collection = mg_db.getCollection(LOGIN_COLLECTION_NAME);
 		Document document = Document.parse(new ObjectMapper().writeValueAsString(aus));
 		Document document2 = Document.parse(new ObjectMapper().writeValueAsString(aus2));
-		mg_collection.insertOne(document);
-		mg_collection.insertOne(document2);
-		
+		//mg_collection.insertOne(document);
+		//mg_collection.insertOne(document2);
+		mg_collection.deleteOne(document2);
+		mg_client.close();
 	}
 }
