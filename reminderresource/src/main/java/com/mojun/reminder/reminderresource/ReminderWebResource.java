@@ -47,7 +47,7 @@ public class ReminderWebResource {
 		return "Got your image";
 	}
 	
-	@PUT
+	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
 	@Path("/event/{userId}")
@@ -70,10 +70,10 @@ public class ReminderWebResource {
 		}
 	}
 	
-	@PUT
+	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
-	@Path("/user")
+	@Path("/usercreation")
 	public Response createReminderUser(ReminderUser	user) {
 		
 		if(user == null) {
@@ -158,7 +158,7 @@ public class ReminderWebResource {
 		}
 	}
 		
-	@PUT
+	@POST
 	@Produces({MediaType.APPLICATION_JSON})
 	@Path("/event/{userId}/{reminderEventId}")
 	public Response updateSingleEvent(@PathParam("userId") String userId, @PathParam("reminderEventId") String reminderEventId, ReminderEvent event, @Context SecurityContext context) {
@@ -180,7 +180,7 @@ public class ReminderWebResource {
 		}
 	}
 	
-	@PUT
+	@POST
 	@Produces({MediaType.APPLICATION_JSON})
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Path("/user/{userId}") 

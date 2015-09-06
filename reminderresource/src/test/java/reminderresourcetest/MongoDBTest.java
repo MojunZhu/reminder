@@ -165,7 +165,7 @@ public class MongoDBTest {
 	@Test
 	public void addLogInUser() throws JsonProcessingException {
 		AuthenticateUserDBRecord aus = new AuthenticateUserDBRecord();
-		aus.setUserId("LogInV1.3");
+		aus.setUserId("LogInV1.2");
 		aus.setPassowrd("password");
 		aus.setRoles("ROLE_CUSTOMER");
 		AuthenticateUserDBRecord aus2 = new AuthenticateUserDBRecord();

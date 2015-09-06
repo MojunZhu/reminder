@@ -39,11 +39,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		auth.authenticationProvider(mongoBDauthProvider);
 	}
 	
-	/*
+	
 	@Override 
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/webapi/");
-	}*/
+		web.ignoring().antMatchers("/webapi/freemodel/**");
+	}
 	
 	
     @Override

@@ -1,26 +1,24 @@
 package com.mojun.reminder.reminderlib;
 
-import java.awt.image.ImagingOpException;
 import java.io.IOException;
-import java.util.List;
 
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 import com.mojun.reminder.exceptions.DataNotFoundException;
-import com.mojun.reminder.reminderdataobj.CreateReminderEventRequest;
-import com.mojun.reminder.reminderdataobj.CreateReminderUserRequest;
 import com.mojun.reminder.reminderdataobj.ReminderEvent;
 import com.mojun.reminder.reminderdataobj.ReminderEventList;
 import com.mojun.reminder.reminderdataobj.ReminderUser;
 import com.mojun.reminder.reminderdb.DBReminderDAO;
 import com.mojun.reminder.reminderdb.DBReminderDOImp;
+import com.mojun.reminder.springsecurity.config.AuthenticateUserDOImp;
+import com.mojun.reminder.springsecurity.config.AuthticateUsers;
 
 @Aspect
 public class ReminderProcessor {
 	
 	public static final String SERVICE_CONFIG_PATH = "reminderresource/service/config"; 
 	public static DBReminderDAO REMINDER_DAO = DBReminderDOImp.getInstance();
+	public static AuthenticateUserDOImp AUTH_DOI = AuthenticateUserDOImp.getInstance();
 	
 	public static ReminderProcessor getDefaultProcessor() {
 		return new ReminderProcessor();
@@ -46,8 +44,14 @@ public class ReminderProcessor {
 		assert user != null;
 		
 		ReminderUser result = null;
+		AuthticateUsers auResult = null;
 		try {
 			result = REMINDER_DAO.upsertDBReminderUser(user);
+			auResult = AUTH_DOI.createAuthenticationRecord(user);
+			if((!auResult.getUserId().equals(result.getUserId())) 
+					|| (!auResult.getPassowrd().equals(result.getPassword()))) {
+				throw new Exception("Auth and user miss match");
+			}
 		} catch (DataNotFoundException e) {
 			System.out.println("Data Not Found, no event, user: " + user.getUserId());
 			System.out.println(e.getMessage());
@@ -56,8 +60,6 @@ public class ReminderProcessor {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
-		 
-		
 		return result;
 	}
 	
@@ -170,6 +172,7 @@ public class ReminderProcessor {
 		ReminderUser result = null;
 		try {
 			REMINDER_DAO.deleteReminderUser(userId);
+			AUTH_DOI.deleteUser(userId);
 		} catch (IOException e) {
 			result = new ReminderUser();
 			e.printStackTrace();
