@@ -55,9 +55,20 @@ public class ReminderClient {
 			logInBuilder.cookie(cookie);
 		}
 		Response logInResponse = logInBuilder.post(Entity.entity(valueForm, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
-		getSetCSRFToken(logInResponse);
-		updateCookies(logInResponse);
-		return logInResponse.getStatus();
+		if(logInResponse.getStatus() == 302) {
+			updateCookies(logInResponse);
+		} else {
+			return logInResponse.getStatus();
+		}
+		WebTarget redirectTarget = client.target(BASE_URL).path("webapi/reminder/getit");
+		Invocation.Builder redirectBuilder = redirectTarget.request(MediaType.APPLICATION_XHTML_XML,MediaType.APPLICATION_XML,MediaType.TEXT_HTML);
+		Response redirectResponse = redirectBuilder.get();
+		if(redirectResponse.getStatus() == 200) {
+			getSetCSRFToken(redirectResponse);
+		} else {
+			return redirectResponse.getStatus();
+		}
+		return redirectResponse.getStatus();
 	}
 	
 	//logout operation
@@ -93,8 +104,6 @@ public class ReminderClient {
 	}
 		
 	//post operation
-		
-	//put operation
 		
 	//delete operation
 	
