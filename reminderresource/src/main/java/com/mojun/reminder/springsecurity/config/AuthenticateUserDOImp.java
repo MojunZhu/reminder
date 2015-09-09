@@ -42,22 +42,33 @@ public class AuthenticateUserDOImp extends MongoDBBasic{
 		return AUTH_USER_INSTANCE;
 	}
 	
-	public AuthticateUsers getAuthenticateUserById(String userId) throws JsonParseException, JsonMappingException, IOException {
+	public AuthticateUsers getAuthenticateUserById(String userId) {
 		Document userDocument = fetchUser(userId);
-		AuthenticateUserDBRecord userDBRecord = OBJ_MAP.readValue(userDocument.toJson(), AuthenticateUserDBRecord.class);
+		AuthenticateUserDBRecord userDBRecord;
+		try {
+			userDBRecord = OBJ_MAP.readValue(userDocument.toJson(), AuthenticateUserDBRecord.class);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			return null;
+		}
 		return new AuthticateUsers(userDBRecord);
 	}
 	
 	public AuthticateUsers createAuthenticationRecord(ReminderUser user) {
 		assert user != null;
-		try {
-			Document document = upsertUser(user);
-			AuthenticateUserDBRecord userDBRecord = OBJ_MAP.readValue(document.toJson(), AuthenticateUserDBRecord.class);
-			AuthticateUsers authticateUsers = new AuthticateUsers(userDBRecord);
-			return authticateUsers;
-		} catch (Exception e) {
+		if(getAuthenticateUserById(user.getUserId()) == null) {
+			try {
+				Document document = upsertUser(user);
+				AuthenticateUserDBRecord userDBRecord = OBJ_MAP.readValue(document.toJson(), AuthenticateUserDBRecord.class);
+				AuthticateUsers authticateUsers = new AuthticateUsers(userDBRecord);
+				return authticateUsers;
+			} catch (Exception e) {
+				return null;
+			}
+		} else {
 			return null;
-		}
+		} 
 	}
 	
 	public Document deleteUser(String userId) {

@@ -11,7 +11,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import com.allanditzel.springframework.security.web.csrf.CsrfTokenResponseHeaderBindingFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -49,6 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
     	http
+    		.csrf().disable()
     		.authorizeRequests()
     			//.antMatchers("/webapi/reminder/user/{\\d+}/**").access("hasAnyAuthority('ROLE_TOKENSAVED')")
     			//.antMatchers("/webapi/reminder/event/{\\d+}/**").access("hasAnyAuthority('ROLE_TOKENSAVED')")
@@ -70,5 +74,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     			.logoutRequestMatcher(new AntPathRequestMatcher("/webapi/logout", "GET" ))
     			.deleteCookies("JSESSIONID")
     			.invalidateHttpSession(true);
+    	
+    	http
+    		.addFilterAfter(new CsrfTokenResponseHeaderBindingFilter(), CsrfFilter.class);
     }
 }

@@ -139,8 +139,10 @@ public class ReminderProcessor {
 		assert user != null;
 		
 		ReminderUser result = null;
+		AuthticateUsers authResult = null;
 		try {
 			result = REMINDER_DAO.updateReminderUser(user);
+			authResult = AUTH_DOI.createAuthenticationRecord(user);
 		} catch (DataNotFoundException e) {
 			System.out.println("Data Not Found, no event, user: " + user.getUserId());
 			System.out.println(e.getMessage());
