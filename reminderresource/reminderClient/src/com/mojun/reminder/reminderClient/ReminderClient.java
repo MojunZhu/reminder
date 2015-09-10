@@ -13,7 +13,6 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
@@ -53,9 +52,9 @@ public class ReminderClient {
 		valueForm.add("submit", "LogIn");
 		//valueForm.add("_csrf", csrfToken);
 		Invocation.Builder logInBuilder = logInTarget.request(MediaType.APPLICATION_XHTML_XML,MediaType.APPLICATION_XML,MediaType.TEXT_HTML);
-		for(NewCookie cookie : cookies.values()) {
+		/*for(NewCookie cookie : cookies.values()) {
 			logInBuilder.cookie(cookie);
-		}
+		}*/
 		Response logInResponse = logInBuilder.post(Entity.entity(valueForm, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
 		if(logInResponse.getStatus() == 302) {
 			updateCookies(logInResponse);
@@ -161,8 +160,80 @@ public class ReminderClient {
 		}*/
 		return updateUserResponse.getStatus();
 	}
+	
+	public ReminderEvent createReminderEvent(ReminderEvent event) {
+		WebTarget createEventTarget = client.target(BASE_URL).path("/event/").path(event.getUserId());
+		Invocation.Builder createEventBuilder = createEventTarget.request(MediaType.APPLICATION_JSON);
+		for(NewCookie cookie : cookies.values()) {
+			createEventBuilder.cookie(cookie);
+		}
+		String request;
+		try {
+			request = OBJ_MAP.writeValueAsString(event);
+		} catch (JsonProcessingException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		Response createEventResponse = createEventBuilder.post(Entity.entity(request, MediaType.APPLICATION_JSON));
+		ReminderEvent newEvent;
+		try {
+			newEvent = OBJ_MAP.readValue(createEventResponse.readEntity(String.class), ReminderEvent.class);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		return newEvent;
+	}
+	
+	public ReminderEvent updateReminderEvent(ReminderEvent event) {
+		WebTarget createEventTarget = client.target(BASE_URL).path("/event/").path(event.getUserId()).path(event.getEventId());
+		Invocation.Builder createEventBuilder = createEventTarget.request(MediaType.APPLICATION_JSON);
+		for(NewCookie cookie : cookies.values()) {
+			createEventBuilder.cookie(cookie);
+		}
+		String request;
+		try {
+			request = OBJ_MAP.writeValueAsString(event);
+		} catch (JsonProcessingException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		Response createEventResponse = createEventBuilder.post(Entity.entity(request, MediaType.APPLICATION_JSON));
+		ReminderEvent newEvent;
+		try {
+			newEvent = OBJ_MAP.readValue(createEventResponse.readEntity(String.class), ReminderEvent.class);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		return newEvent;
+	}
 		
 	//delete operation
+	
+	public int deleteUser(ReminderUser user) {
+		WebTarget deleteUserTarget = client.target(BASE_URL).path("/user/").path(user.getUserId());
+		Invocation.Builder deleteUserBuilder = deleteUserTarget.request(MediaType.APPLICATION_JSON);
+		for(NewCookie cookie : cookies.values()) {
+			deleteUserBuilder.cookie(cookie);
+		}
+		Response deleteUserResponse = deleteUserBuilder.delete();
+		return deleteUserResponse.getStatus();
+	} 
+	
+	public int deleteEvent(ReminderEvent event) {
+		WebTarget deleteEventTarget = client.target(BASE_URL).path("/event/").path(event.getUserId()).path(event.getEventId());
+		Invocation.Builder deleteEventBuilder = deleteEventTarget.request(MediaType.APPLICATION_JSON);
+		for(NewCookie cookie : cookies.values()) {
+			deleteEventBuilder.cookie(cookie);
+		}
+		Response deleteEventResponse = deleteEventBuilder.delete();
+		return deleteEventResponse.getStatus();
+	}
 	
 	/*private void getSetCSRFToken(Response response) {
 		if(response == null) {
